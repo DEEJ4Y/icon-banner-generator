@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import IconMultiSelect from './IconMultiSelect';
 
 export const RESOLUTIONS = [
@@ -43,23 +44,48 @@ function NumberInput({
   max,
   onChange,
   suffix,
+  placeholder,
 }: {
   value: number;
   min?: number;
   max?: number;
   onChange: (n: number) => void;
   suffix?: string;
+  placeholder?: string;
 }) {
+  const [localValue, setLocalValue] = useState(String(value));
+  const isFocused = useRef(false);
+
+  useEffect(() => {
+    if (!isFocused.current) {
+      setLocalValue(String(value));
+    }
+  }, [value]);
+
   return (
     <div className="flex items-center gap-1">
       <input
         type="number"
-        value={value}
+        value={localValue}
         min={min}
         max={max}
+        placeholder={placeholder}
         onChange={(e) => {
+          setLocalValue(e.target.value);
           const n = parseInt(e.target.value, 10);
           if (!isNaN(n)) onChange(n);
+        }}
+        onFocus={() => {
+          isFocused.current = true;
+        }}
+        onBlur={() => {
+          isFocused.current = false;
+          const n = parseInt(localValue, 10);
+          if (isNaN(n) || (min !== undefined && n < min)) {
+            setLocalValue(String(value));
+          } else {
+            setLocalValue(String(n));
+          }
         }}
         className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
       />
@@ -108,28 +134,22 @@ export default function ControlPanel({ config, onChange }: Props) {
               </select>
               {isCustom && (
                 <div className="flex items-center gap-2 mt-1.5">
-                  <input
-                    type="number"
+                  <NumberInput
                     value={config.resolution.width}
                     min={1}
-                    onChange={(e) => {
-                      const n = parseInt(e.target.value, 10);
-                      if (!isNaN(n) && n > 0) update('resolution', { label: 'Custom', width: n, height: config.resolution.height });
-                    }}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
                     placeholder="Width"
+                    onChange={(n) => {
+                      if (n > 0) update('resolution', { label: 'Custom', width: n, height: config.resolution.height });
+                    }}
                   />
                   <span className="text-xs text-gray-400 flex-shrink-0">×</span>
-                  <input
-                    type="number"
+                  <NumberInput
                     value={config.resolution.height}
                     min={1}
-                    onChange={(e) => {
-                      const n = parseInt(e.target.value, 10);
-                      if (!isNaN(n) && n > 0) update('resolution', { label: 'Custom', width: config.resolution.width, height: n });
-                    }}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
                     placeholder="Height"
+                    onChange={(n) => {
+                      if (n > 0) update('resolution', { label: 'Custom', width: config.resolution.width, height: n });
+                    }}
                   />
                 </div>
               )}
