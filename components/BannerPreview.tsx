@@ -80,8 +80,8 @@ export default function BannerPreview({ config }: Props) {
         className="relative rounded-lg shadow-md overflow-hidden border border-gray-200"
         style={{
           width: previewW,
-          height: previewH,
           maxWidth: '100%',
+          aspectRatio: `${previewW} / ${previewH}`,
           backgroundImage:
             'linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%)',
           backgroundSize: '16px 16px',

@@ -20,22 +20,56 @@ const DEFAULT_CONFIG: BannerConfig = {
 
 export default function BannerApp() {
   const [config, setConfig] = useState<BannerConfig>(DEFAULT_CONFIG);
+  const [mobilePanel, setMobilePanel] = useState<'preview' | 'settings'>('preview');
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* Sidebar */}
-      <ControlPanel config={config} onChange={setConfig} />
+    <div className="flex flex-col md:flex-row h-screen bg-gray-50 overflow-hidden">
+      {/* Mobile header — tab switcher + download */}
+      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 flex-shrink-0 gap-3">
+        <div className="flex bg-gray-100 rounded-lg p-1 gap-0.5">
+          <button
+            onClick={() => setMobilePanel('preview')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              mobilePanel === 'preview'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Preview
+          </button>
+          <button
+            onClick={() => setMobilePanel('settings')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              mobilePanel === 'settings'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Settings
+          </button>
+        </div>
+        <DownloadButton config={config} />
+      </div>
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Top bar */}
-        <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 flex-shrink-0">
+      {/* Sidebar / Settings panel */}
+      <div
+        className={`${mobilePanel === 'settings' ? 'flex' : 'hidden'} md:flex flex-col md:w-72 md:flex-shrink-0 flex-1 md:flex-none overflow-hidden`}
+      >
+        <ControlPanel config={config} onChange={setConfig} />
+      </div>
+
+      {/* Main content / Preview panel */}
+      <main
+        className={`${mobilePanel === 'preview' ? 'flex' : 'hidden'} md:flex flex-1 flex-col overflow-hidden`}
+      >
+        {/* Desktop top bar */}
+        <div className="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 flex-shrink-0">
           <h2 className="text-sm font-medium text-gray-500">Preview</h2>
           <DownloadButton config={config} />
         </div>
 
         {/* Preview area */}
-        <div className="flex-1 overflow-auto flex items-center justify-center p-6">
+        <div className="flex-1 overflow-auto flex items-center justify-center p-4 md:p-6">
           <BannerPreview config={config} />
         </div>
       </main>

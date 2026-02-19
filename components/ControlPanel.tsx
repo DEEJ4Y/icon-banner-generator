@@ -74,7 +74,7 @@ export default function ControlPanel({ config, onChange }: Props) {
   }
 
   return (
-    <aside className="w-72 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-y-auto">
+    <aside className="w-full h-full bg-white border-r border-gray-200 flex flex-col overflow-y-auto">
       {/* Header */}
       <div className="px-5 py-4 border-b border-gray-100">
         <h1 className="text-lg font-bold text-gray-900">Banner Gen</h1>
