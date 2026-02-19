@@ -1,5 +1,7 @@
 # Banner Gen
 
+Try it out: [https://icon-banner-generator.vercel.app/](https://icon-banner-generator.vercel.app/)
+
 A browser-based tool for generating and downloading PNG banners made of evenly distributed [Tabler Icons](https://tabler.io/icons) on a white background. No server, no sign-up — configure and export entirely in the browser.
 
 ## Docs
@@ -24,15 +26,15 @@ The banner is rendered onto an HTML5 Canvas at the target resolution, then expor
 
 ## Options
 
-| Option | Default |
-|---|---|
-| Resolution | 1080p (1920x1080) |
-| Icons | None (min 1 required) |
-| Icon Size | 24px |
-| Icon Spacing | 16px |
-| Outer Padding | 0px |
-| Rotation | 0deg |
-| Icon Color | `#d1d5db` |
+| Option        | Default               |
+| ------------- | --------------------- |
+| Resolution    | 1080p (1920x1080)     |
+| Icons         | None (min 1 required) |
+| Icon Size     | 24px                  |
+| Icon Spacing  | 16px                  |
+| Outer Padding | 0px                   |
+| Rotation      | 0deg                  |
+| Icon Color    | `#d1d5db`             |
 
 ## Stack
 
