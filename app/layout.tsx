@@ -3,10 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Banner Gen",
-  description: "Generate and download icon pattern banners",
+  description: "Generate and download icon pattern banners. Totally free, no sign up needed.",
   openGraph: {
     title: "Banner Gen",
-    description: "Generate and download icon pattern banners",
+    description: "Generate and download icon pattern banners. Totally free, no sign up needed.",
     images: [
       {
         url: "/banner.png",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Banner Gen",
-    description: "Generate and download icon pattern banners",
+    description: "Generate and download icon pattern banners. Totally free, no sign up needed.",
     images: ["/banner.png"],
   },
 };
