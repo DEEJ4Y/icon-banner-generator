@@ -76,9 +76,9 @@ export async function renderBanner(
 
   const rotationRad = (rotation * Math.PI) / 180;
 
-  // Draw all cells in order
+  // Draw all cells with a random icon per cell
   for (const pos of positions) {
-    const name = iconNames[pos.iconIndex];
+    const name = iconNames[Math.floor(Math.random() * iconNames.length)];
     const img = imageMap.get(name);
     if (!img) continue;
 
