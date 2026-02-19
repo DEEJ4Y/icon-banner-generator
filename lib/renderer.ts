@@ -10,6 +10,9 @@ export interface RenderConfig {
   padding: number;
   rotation: number;
   color: string;
+  iconOpacity: number;
+  bgColor: string;
+  bgOpacity: number;
 }
 
 function buildSvgString(innerPaths: string, size: number, color: string): string {
@@ -37,7 +40,7 @@ export async function renderBanner(
   canvas: HTMLCanvasElement,
   config: RenderConfig
 ): Promise<void> {
-  const { width, height, iconNames, iconSize, spacing, padding, rotation, color } = config;
+  const { width, height, iconNames, iconSize, spacing, padding, rotation, color, iconOpacity, bgColor, bgOpacity } = config;
 
   canvas.width = width;
   canvas.height = height;
@@ -45,9 +48,14 @@ export async function renderBanner(
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Could not get canvas context');
 
-  // White background
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, width, height);
+  // Background — clear first, then fill if opacity > 0
+  ctx.clearRect(0, 0, width, height);
+  if (bgOpacity > 0) {
+    ctx.globalAlpha = bgOpacity / 100;
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, width, height);
+    ctx.globalAlpha = 1;
+  }
 
   if (iconNames.length === 0) return;
 
@@ -77,6 +85,7 @@ export async function renderBanner(
   const rotationRad = (rotation * Math.PI) / 180;
 
   // Draw all cells with a random icon per cell
+  ctx.globalAlpha = iconOpacity / 100;
   for (const pos of positions) {
     const name = iconNames[Math.floor(Math.random() * iconNames.length)];
     const img = imageMap.get(name);
@@ -91,4 +100,5 @@ export async function renderBanner(
     ctx.drawImage(img, -iconSize / 2, -iconSize / 2, iconSize, iconSize);
     ctx.restore();
   }
+  ctx.globalAlpha = 1;
 }

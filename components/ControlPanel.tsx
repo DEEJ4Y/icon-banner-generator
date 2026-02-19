@@ -18,6 +18,9 @@ export interface BannerConfig {
   padding: number;
   rotation: number;
   color: string;
+  iconOpacity: number;
+  bgColor: string;
+  bgOpacity: number;
 }
 
 interface Props {
@@ -175,7 +178,40 @@ export default function ControlPanel({ config, onChange }: Props) {
           </div>
         </Field>
 
-        {/* Color */}
+        {/* Background Color */}
+        <Field label="Background Color">
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={config.bgColor}
+              onChange={(e) => update('bgColor', e.target.value)}
+              className="w-10 h-9 rounded-lg border border-gray-300 cursor-pointer p-0.5 flex-shrink-0"
+            />
+            <input
+              type="text"
+              value={config.bgColor}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (/^#[0-9a-fA-F]{0,6}$/.test(v)) update('bgColor', v);
+              }}
+              placeholder="#ffffff"
+              className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+            />
+          </div>
+          <div className="flex items-center gap-2 mt-1.5">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={config.bgOpacity}
+              onChange={(e) => update('bgOpacity', parseInt(e.target.value, 10))}
+              className="flex-1 accent-indigo-500"
+            />
+            <span className="text-xs text-gray-500 w-9 text-right tabular-nums">{config.bgOpacity}%</span>
+          </div>
+        </Field>
+
+        {/* Icon Color */}
         <Field label="Icon Color">
           <div className="flex items-center gap-2">
             <input
@@ -194,6 +230,17 @@ export default function ControlPanel({ config, onChange }: Props) {
               placeholder="#d1d5db"
               className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
             />
+          </div>
+          <div className="flex items-center gap-2 mt-1.5">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={config.iconOpacity}
+              onChange={(e) => update('iconOpacity', parseInt(e.target.value, 10))}
+              className="flex-1 accent-indigo-500"
+            />
+            <span className="text-xs text-gray-500 w-9 text-right tabular-nums">{config.iconOpacity}%</span>
           </div>
         </Field>
       </div>

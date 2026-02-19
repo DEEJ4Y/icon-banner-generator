@@ -13,7 +13,7 @@ interface Props {
 export default function DownloadButton({ config }: Props) {
   const [loading, setLoading] = useState(false);
 
-  const { resolution, selectedIcons, iconSize, spacing, padding, rotation, color } = config;
+  const { resolution, selectedIcons, iconSize, spacing, padding, rotation, color, iconOpacity, bgColor, bgOpacity } = config;
   const { width, height } = resolution;
 
   const grid = calculateGrid({ canvasWidth: width, canvasHeight: height, iconSize, spacing, padding });
@@ -34,6 +34,9 @@ export default function DownloadButton({ config }: Props) {
         padding,
         rotation,
         color,
+        iconOpacity,
+        bgColor,
+        bgOpacity,
       });
 
       const dataUrl = offscreen.toDataURL('image/png');

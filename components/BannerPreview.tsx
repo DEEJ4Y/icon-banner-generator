@@ -17,7 +17,7 @@ export default function BannerPreview({ config }: Props) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const renderingRef = useRef(false);
 
-  const { resolution, selectedIcons, iconSize, spacing, padding, rotation, color } = config;
+  const { resolution, selectedIcons, iconSize, spacing, padding, rotation, color, iconOpacity, bgColor, bgOpacity } = config;
   const { width: resW, height: resH } = resolution;
 
   // Compute scaled dimensions for preview
@@ -43,11 +43,14 @@ export default function BannerPreview({ config }: Props) {
         padding: Math.round(padding * scale),
         rotation,
         color,
+        iconOpacity,
+        bgColor,
+        bgOpacity,
       });
     } finally {
       renderingRef.current = false;
     }
-  }, [previewW, previewH, scale, selectedIcons, iconSize, spacing, padding, rotation, color]);
+  }, [previewW, previewH, scale, selectedIcons, iconSize, spacing, padding, rotation, color, iconOpacity, bgColor, bgOpacity]);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -74,8 +77,17 @@ export default function BannerPreview({ config }: Props) {
     <div className="flex flex-col items-center gap-3 w-full">
       {/* Canvas wrapper */}
       <div
-        className="relative bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
-        style={{ width: previewW, height: previewH, maxWidth: '100%' }}
+        className="relative rounded-lg shadow-md overflow-hidden border border-gray-200"
+        style={{
+          width: previewW,
+          height: previewH,
+          maxWidth: '100%',
+          backgroundImage:
+            'linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%)',
+          backgroundSize: '16px 16px',
+          backgroundPosition: '0 0, 0 8px, 8px -8px, -8px 0px',
+          backgroundColor: '#f9fafb',
+        }}
       >
         <canvas
           ref={canvasRef}

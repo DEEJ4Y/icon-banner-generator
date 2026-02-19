@@ -13,6 +13,9 @@ const DEFAULT_CONFIG: BannerConfig = {
   padding: 0,
   rotation: 0,
   color: '#d1d5db',
+  iconOpacity: 100,
+  bgColor: '#ffffff',
+  bgOpacity: 100,
 };
 
 export default function BannerApp() {
