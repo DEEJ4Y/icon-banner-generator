@@ -33,7 +33,6 @@ The banner is rendered onto an HTML5 Canvas at the target resolution, then expor
 | Icon Size     | 24px                  |
 | Icon Spacing  | 16px                  |
 | Outer Padding | 0px                   |
-| Rotation      | 0deg                  |
 | Icon Color    | `#d1d5db`             |
 
 ## Stack
