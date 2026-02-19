@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import IconMultiSelect from './IconMultiSelect';
 
 export const RESOLUTIONS = [
@@ -43,23 +44,53 @@ function NumberInput({
   max,
   onChange,
   suffix,
+  placeholder,
+  className,
 }: {
   value: number;
   min?: number;
   max?: number;
   onChange: (n: number) => void;
   suffix?: string;
+  placeholder?: string;
+  className?: string;
 }) {
+  const [localValue, setLocalValue] = useState(String(value));
+  const prevValueRef = useRef(value);
+
+  useEffect(() => {
+    if (value !== prevValueRef.current) {
+      prevValueRef.current = value;
+      setLocalValue(String(value));
+    }
+  }, [value]);
+
+  function isInRange(n: number) {
+    if (min !== undefined && n < min) return false;
+    if (max !== undefined && n > max) return false;
+    return true;
+  }
+
   return (
-    <div className="flex items-center gap-1">
+    <div className={`flex items-center gap-1${className ? ` ${className}` : ''}`}>
       <input
         type="number"
-        value={value}
+        value={localValue}
         min={min}
         max={max}
+        placeholder={placeholder}
         onChange={(e) => {
+          setLocalValue(e.target.value);
           const n = parseInt(e.target.value, 10);
-          if (!isNaN(n)) onChange(n);
+          if (!isNaN(n) && isInRange(n)) onChange(n);
+        }}
+        onBlur={() => {
+          const n = parseInt(localValue, 10);
+          if (isNaN(n) || !isInRange(n)) {
+            setLocalValue(String(value));
+          } else {
+            setLocalValue(String(n));
+          }
         }}
         className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
       />
@@ -108,28 +139,20 @@ export default function ControlPanel({ config, onChange }: Props) {
               </select>
               {isCustom && (
                 <div className="flex items-center gap-2 mt-1.5">
-                  <input
-                    type="number"
+                  <NumberInput
                     value={config.resolution.width}
                     min={1}
-                    onChange={(e) => {
-                      const n = parseInt(e.target.value, 10);
-                      if (!isNaN(n) && n > 0) update('resolution', { label: 'Custom', width: n, height: config.resolution.height });
-                    }}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
                     placeholder="Width"
+                    className="flex-1"
+                    onChange={(n) => update('resolution', { label: 'Custom', width: n, height: config.resolution.height })}
                   />
                   <span className="text-xs text-gray-400 flex-shrink-0">×</span>
-                  <input
-                    type="number"
+                  <NumberInput
                     value={config.resolution.height}
                     min={1}
-                    onChange={(e) => {
-                      const n = parseInt(e.target.value, 10);
-                      if (!isNaN(n) && n > 0) update('resolution', { label: 'Custom', width: config.resolution.width, height: n });
-                    }}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
                     placeholder="Height"
+                    className="flex-1"
+                    onChange={(n) => update('resolution', { label: 'Custom', width: config.resolution.width, height: n })}
                   />
                 </div>
               )}
