@@ -7,7 +7,7 @@ import DownloadButton from './DownloadButton';
 
 const DEFAULT_CONFIG: BannerConfig = {
   resolution: RESOLUTIONS[0], // 1080p
-  selectedIcons: [],
+  selectedIcons: ['car', 'motorbike', 'id', 'password', 'user-heart', 'home-shield', 'notebook', 'list-check', 'credit-card', 'address-book'],
   iconSize: 24,
   spacing: 16,
   padding: 0,
