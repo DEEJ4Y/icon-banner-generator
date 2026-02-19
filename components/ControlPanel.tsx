@@ -148,36 +148,6 @@ export default function ControlPanel({ config, onChange }: Props) {
           />
         </Field>
 
-        {/* Rotation */}
-        <Field label="Rotation">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2">
-              <input
-                type="range"
-                min={-180}
-                max={180}
-                value={config.rotation}
-                onChange={(e) => update('rotation', parseInt(e.target.value, 10))}
-                className="flex-1 accent-indigo-500"
-              />
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  value={config.rotation}
-                  min={-180}
-                  max={180}
-                  onChange={(e) => {
-                    const n = parseInt(e.target.value, 10);
-                    if (!isNaN(n)) update('rotation', Math.max(-180, Math.min(180, n)));
-                  }}
-                  className="w-16 border border-gray-300 rounded-lg px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
-                />
-                <span className="text-xs text-gray-400">°</span>
-              </div>
-            </div>
-          </div>
-        </Field>
-
         {/* Background Color */}
         <Field label="Background Color">
           <div className="flex items-center gap-2">
