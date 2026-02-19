@@ -23,7 +23,7 @@ export default function BannerApp() {
   const [mobilePanel, setMobilePanel] = useState<'preview' | 'settings'>('preview');
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gray-50 overflow-hidden">
+    <div id="tool" className="flex flex-col md:flex-row flex-1 min-h-0 bg-gray-50 overflow-hidden">
       {/* Mobile header — tab switcher + download */}
       <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 flex-shrink-0 gap-3">
         <div className="flex bg-gray-100 rounded-lg p-1 gap-0.5">
