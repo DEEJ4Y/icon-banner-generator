@@ -6,9 +6,9 @@ export const RESOLUTIONS = [
   { label: '1080p (1920×1080)', width: 1920, height: 1080 },
   { label: '1440p (2560×1440)', width: 2560, height: 1440 },
   { label: '2160p (3840×2160)', width: 3840, height: 2160 },
-] as const;
+];
 
-export type Resolution = (typeof RESOLUTIONS)[number];
+export type Resolution = { label: string; width: number; height: number };
 
 export interface BannerConfig {
   resolution: Resolution;
@@ -83,24 +83,59 @@ export default function ControlPanel({ config, onChange }: Props) {
 
       <div className="px-5 py-4 flex flex-col gap-5">
         {/* Resolution */}
-        <Field label="Resolution">
-          <select
-            value={`${config.resolution.width}x${config.resolution.height}`}
-            onChange={(e) => {
-              const res = RESOLUTIONS.find(
-                (r) => `${r.width}x${r.height}` === e.target.value
-              );
-              if (res) update('resolution', res);
-            }}
-            className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent bg-white"
-          >
-            {RESOLUTIONS.map((r) => (
-              <option key={`${r.width}x${r.height}`} value={`${r.width}x${r.height}`}>
-                {r.label}
-              </option>
-            ))}
-          </select>
-        </Field>
+        {(() => {
+          const isCustom = config.resolution.label === 'Custom';
+          return (
+            <Field label="Resolution">
+              <select
+                value={isCustom ? 'custom' : `${config.resolution.width}x${config.resolution.height}`}
+                onChange={(e) => {
+                  if (e.target.value === 'custom') {
+                    update('resolution', { label: 'Custom', width: config.resolution.width, height: config.resolution.height });
+                  } else {
+                    const res = RESOLUTIONS.find((r) => `${r.width}x${r.height}` === e.target.value);
+                    if (res) update('resolution', res);
+                  }
+                }}
+                className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent bg-white"
+              >
+                {RESOLUTIONS.map((r) => (
+                  <option key={`${r.width}x${r.height}`} value={`${r.width}x${r.height}`}>
+                    {r.label}
+                  </option>
+                ))}
+                <option value="custom">Custom</option>
+              </select>
+              {isCustom && (
+                <div className="flex items-center gap-2 mt-1.5">
+                  <input
+                    type="number"
+                    value={config.resolution.width}
+                    min={1}
+                    onChange={(e) => {
+                      const n = parseInt(e.target.value, 10);
+                      if (!isNaN(n) && n > 0) update('resolution', { label: 'Custom', width: n, height: config.resolution.height });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                    placeholder="Width"
+                  />
+                  <span className="text-xs text-gray-400 flex-shrink-0">×</span>
+                  <input
+                    type="number"
+                    value={config.resolution.height}
+                    min={1}
+                    onChange={(e) => {
+                      const n = parseInt(e.target.value, 10);
+                      if (!isNaN(n) && n > 0) update('resolution', { label: 'Custom', width: config.resolution.width, height: n });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                    placeholder="Height"
+                  />
+                </div>
+              )}
+            </Field>
+          );
+        })()}
 
         {/* Icons */}
         <Field label="Icons">
