@@ -45,6 +45,7 @@ function NumberInput({
   onChange,
   suffix,
   placeholder,
+  className,
 }: {
   value: number;
   min?: number;
@@ -52,18 +53,26 @@ function NumberInput({
   onChange: (n: number) => void;
   suffix?: string;
   placeholder?: string;
+  className?: string;
 }) {
   const [localValue, setLocalValue] = useState(String(value));
-  const isFocused = useRef(false);
+  const prevValueRef = useRef(value);
 
   useEffect(() => {
-    if (!isFocused.current) {
+    if (value !== prevValueRef.current) {
+      prevValueRef.current = value;
       setLocalValue(String(value));
     }
   }, [value]);
 
+  function isInRange(n: number) {
+    if (min !== undefined && n < min) return false;
+    if (max !== undefined && n > max) return false;
+    return true;
+  }
+
   return (
-    <div className="flex items-center gap-1">
+    <div className={`flex items-center gap-1${className ? ` ${className}` : ''}`}>
       <input
         type="number"
         value={localValue}
@@ -73,15 +82,11 @@ function NumberInput({
         onChange={(e) => {
           setLocalValue(e.target.value);
           const n = parseInt(e.target.value, 10);
-          if (!isNaN(n)) onChange(n);
-        }}
-        onFocus={() => {
-          isFocused.current = true;
+          if (!isNaN(n) && isInRange(n)) onChange(n);
         }}
         onBlur={() => {
-          isFocused.current = false;
           const n = parseInt(localValue, 10);
-          if (isNaN(n) || (min !== undefined && n < min)) {
+          if (isNaN(n) || !isInRange(n)) {
             setLocalValue(String(value));
           } else {
             setLocalValue(String(n));
@@ -138,18 +143,16 @@ export default function ControlPanel({ config, onChange }: Props) {
                     value={config.resolution.width}
                     min={1}
                     placeholder="Width"
-                    onChange={(n) => {
-                      if (n > 0) update('resolution', { label: 'Custom', width: n, height: config.resolution.height });
-                    }}
+                    className="flex-1"
+                    onChange={(n) => update('resolution', { label: 'Custom', width: n, height: config.resolution.height })}
                   />
                   <span className="text-xs text-gray-400 flex-shrink-0">×</span>
                   <NumberInput
                     value={config.resolution.height}
                     min={1}
                     placeholder="Height"
-                    onChange={(n) => {
-                      if (n > 0) update('resolution', { label: 'Custom', width: config.resolution.width, height: n });
-                    }}
+                    className="flex-1"
+                    onChange={(n) => update('resolution', { label: 'Custom', width: config.resolution.width, height: n })}
                   />
                 </div>
               )}
